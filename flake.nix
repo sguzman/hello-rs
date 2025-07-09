@@ -18,13 +18,22 @@
         rustToolchain = pkgs.rust-bin.stable."1.85.0".default;
       in
       {
-        packages.default = pkgs.rustPlatform.buildRustPackage {
+        packages.default = pkgs.stdenv.mkDerivation {
           pname = "hello-rs";
           version = "1.0.0";
+
           src = ./.;
-          cargoLock = {
-            lockFile = ./Cargo.lock;
-          };
+
+          nativeBuildInputs = [ rustToolchain ];
+
+          buildPhase = ''
+            cargo build --release
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin
+            cp target/release/hello-rs $out/bin/
+          '';
         };
 
         devShells.default = pkgs.mkShell {
