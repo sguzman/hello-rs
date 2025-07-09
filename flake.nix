@@ -15,14 +15,13 @@
           inherit system overlays;
         };
 
-        rustToolchain = pkgs.rust-bin.nightly.latest.default;  # switched from stable.latest
+        rustToolchain = pkgs.rust-bin.stable."1.85.0".default;
       in
       {
         packages.default = pkgs.rustPlatform.buildRustPackage {
           pname = "hello-rs";
           version = "1.0.0";
           src = ./.;
-
           cargoLock = {
             lockFile = ./Cargo.lock;
           };
@@ -30,7 +29,6 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = [ rustToolchain ];
-          RUST_BACKTRACE = "1";
         };
       }
     );
